@@ -34,6 +34,12 @@
             <artifactId>telegrambots</artifactId>
             <version>${telegram.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>maven-lombok-plugin</artifactId>
+            <version>0.9.3.1</version>
+        </dependency>
     </dependencies>
 
     <build>
