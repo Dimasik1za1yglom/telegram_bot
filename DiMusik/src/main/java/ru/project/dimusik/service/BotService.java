@@ -1,5 +1,7 @@
 package ru.project.dimusik.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -9,7 +11,7 @@ import ru.project.dimusik.config.BotConfiguration;
 
 @Service
 public class BotService extends TelegramLongPollingBot {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(BotService.class);
 
     private final BotConfiguration botConfiguration;
 
@@ -32,7 +34,7 @@ public class BotService extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String textMessage = update.getMessage().getText();
             Long idChat = update.getMessage().getChatId();
-
+            LOGGER.info("Received a message: {} - chat id: {}", textMessage, idChat);
             switch (textMessage) {
                 case "/start" -> startCommand(idChat, update.getMessage().getChat().getUserName());
                 default -> sentMessage(idChat, "Команда пока не поддерживается, сорямба)");
@@ -53,7 +55,7 @@ public class BotService extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            LOGGER.error("Error sending the message: {}", e.getMessage());
         }
     }
 }
