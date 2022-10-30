@@ -4,10 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.project.dimusik.config.BotConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BotService extends TelegramLongPollingBot {
@@ -17,6 +22,7 @@ public class BotService extends TelegramLongPollingBot {
 
     public BotService(BotConfiguration botConfiguration) {
         this.botConfiguration = botConfiguration;
+        createMenu();
     }
 
     @Override
@@ -57,5 +63,29 @@ public class BotService extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             LOGGER.error("Error sending the message: {}", e.getMessage());
         }
+    }
+
+    private void createMenu() {
+        List<BotCommand> listCommands = new ArrayList<>();
+        listCommands.add(new BotCommand("/help", "Что может данный бот"));
+        listCommands.add(new BotCommand("/start", "Сообщение с приветствием"));
+        listCommands.add(new BotCommand("/search_music", "Поиск композиции для воспроизведения"));
+        listCommands.add(new BotCommand("/play", "Возпроизводить композицю"));
+        listCommands.add(new BotCommand("/pause", "Поставить композициб на паузу"));
+        listCommands.add(new BotCommand("/stop", "Остановить композицию"));
+        listCommands.add(new BotCommand("/view_queue", "Посмотреть очередь"));
+        listCommands.add(new BotCommand("/clear_queue", "Очистить всю очередь"));
+        listCommands.add(new BotCommand("/del_queue", "Удалить из очереди"));
+        listCommands.add(new BotCommand("/my_data", "Посмотреть мои данные, как пользователя"));
+        listCommands.add(new BotCommand("/del_my_data", "Удалить мои данные, как пользователя"));
+        listCommands.add(new BotCommand("/settings", "Изменить настройки"));
+        LOGGER.info("create list commands");
+        try {
+            this.execute(SetMyCommands.builder()
+                    .commands(listCommands).build());
+        } catch (TelegramApiException e) {
+            LOGGER.error("Menu creation error: {}", e.getMessage());
+        }
+        LOGGER.info("The bot menu has been created");
     }
 }
