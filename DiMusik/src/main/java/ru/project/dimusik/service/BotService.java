@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -17,6 +18,8 @@ import java.util.List;
 @Service
 public class BotService extends TelegramLongPollingBot {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotService.class);
+    private static final String HELP_TEXT = "Сорян, помощи не будет.\n\n " +
+            "Просто напиши /start и не парся!";
 
     private final BotConfiguration botConfiguration;
 
@@ -38,13 +41,18 @@ public class BotService extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String textMessage = update.getMessage().getText();
-            Long idChat = update.getMessage().getChatId();
-            LOGGER.info("Received a message: {} - chat id: {}", textMessage, idChat);
-            switch (textMessage) {
-                case "/start" -> startCommand(idChat, update.getMessage().getChat().getUserName());
-                default -> sentMessage(idChat, "Команда пока не поддерживается, сорямба)");
-            }
+            respondToCommands(update.getMessage());
+        }
+    }
+
+    private void respondToCommands(Message message) {
+        String textMessage = message.getText();
+        Long idChat = message.getChatId();
+        LOGGER.info("Received a message: {} - chat id: {}", textMessage, idChat);
+        switch (textMessage) {
+            case "/start" -> startCommand(idChat, message.getChat().getUserName());
+            case "/help" -> sentMessage(idChat, HELP_TEXT);
+            default -> sentMessage(idChat, "Команда пока не поддерживается, сорямба)");
         }
     }
 
