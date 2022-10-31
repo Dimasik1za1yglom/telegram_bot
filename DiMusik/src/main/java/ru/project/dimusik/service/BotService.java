@@ -6,12 +6,16 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.project.dimusik.config.BotConfiguration;
+import ru.project.dimusik.dao.AccountRepository;
+import ru.project.dimusik.entities.Account;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +26,11 @@ public class BotService extends TelegramLongPollingBot {
             "Просто напиши /start и не парся!";
 
     private final BotConfiguration botConfiguration;
+    private final AccountRepository accountRepository;
 
-    public BotService(BotConfiguration botConfiguration) {
+    public BotService(BotConfiguration botConfiguration, AccountRepository accountRepository) {
         this.botConfiguration = botConfiguration;
+        this.accountRepository = accountRepository;
         createMenu();
     }
 
@@ -50,7 +56,10 @@ public class BotService extends TelegramLongPollingBot {
         Long idChat = message.getChatId();
         LOGGER.info("Received a message: {} - chat id: {}", textMessage, idChat);
         switch (textMessage) {
-            case "/start" -> startCommand(idChat, message.getChat().getUserName());
+            case "/start" -> {
+                registerAccount(message);
+                startCommand(idChat, message.getChat().getUserName());
+            }
             case "/help" -> sentMessage(idChat, HELP_TEXT);
             default -> sentMessage(idChat, "Команда пока не поддерживается, сорямба)");
         }
@@ -95,5 +104,21 @@ public class BotService extends TelegramLongPollingBot {
             LOGGER.error("Menu creation error: {}", e.getMessage());
         }
         LOGGER.info("The bot menu has been created");
+    }
+
+    private void registerAccount(Message message) {
+        Long chatId = message.getChatId();
+        if (accountRepository.findAccountsByChatId(chatId).isEmpty()) {
+            Chat chat = message.getChat();
+            Account account = Account.builder()
+                    .firstName(chat.getFirstName())
+                    .lastName(chat.getLastName())
+                    .userName(chat.getUserName())
+                    .chatId(chatId)
+                    .registeredAt(LocalDateTime.now())
+                    .build();
+            accountRepository.save(account);
+            LOGGER.info("saving a new chat account: {}", account);
+        }
     }
 }
