@@ -1,5 +1,6 @@
 package ru.project.dimusik.service;
 
+import com.vdurmont.emoji.EmojiParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class BotService extends TelegramLongPollingBot {
     }
 
     private void startCommand(Long idChat, String nameUser) {
-        String answer = String.format("Привет, %s!", nameUser);
+        String answer = EmojiParser.parseToUnicode(String.format("Привет, %s! :heart_eyes:", nameUser));
         sentMessage(idChat, answer);
     }
 
@@ -86,16 +87,16 @@ public class BotService extends TelegramLongPollingBot {
         List<BotCommand> listCommands = new ArrayList<>();
         listCommands.add(new BotCommand("/help", "Что может данный бот"));
         listCommands.add(new BotCommand("/start", "Сообщение с приветствием"));
-        listCommands.add(new BotCommand("/search_music", "Поиск композиции для воспроизведения"));
-        listCommands.add(new BotCommand("/play", "Возпроизводить композицю"));
-        listCommands.add(new BotCommand("/pause", "Поставить композициб на паузу"));
-        listCommands.add(new BotCommand("/stop", "Остановить композицию"));
-        listCommands.add(new BotCommand("/view_queue", "Посмотреть очередь"));
-        listCommands.add(new BotCommand("/clear_queue", "Очистить всю очередь"));
-        listCommands.add(new BotCommand("/del_queue", "Удалить из очереди"));
-        listCommands.add(new BotCommand("/my_data", "Посмотреть мои данные, как пользователя"));
-        listCommands.add(new BotCommand("/del_my_data", "Удалить мои данные, как пользователя"));
-        listCommands.add(new BotCommand("/settings", "Изменить настройки"));
+//        listCommands.add(new BotCommand("/search_music", "Поиск композиции для воспроизведения"));
+//        listCommands.add(new BotCommand("/play", "Возпроизводить композицю"));
+//        listCommands.add(new BotCommand("/pause", "Поставить композициб на паузу"));
+//        listCommands.add(new BotCommand("/stop", "Остановить композицию"));
+//        listCommands.add(new BotCommand("/view_queue", "Посмотреть очередь"));
+//        listCommands.add(new BotCommand("/clear_queue", "Очистить всю очередь"));
+//        listCommands.add(new BotCommand("/del_queue", "Удалить из очереди"));
+//        listCommands.add(new BotCommand("/my_data", "Посмотреть мои данные, как пользователя"));
+//        listCommands.add(new BotCommand("/del_my_data", "Удалить мои данные, как пользователя"));
+//        listCommands.add(new BotCommand("/settings", "Изменить настройки"));
         LOGGER.info("create list commands");
         try {
             this.execute(SetMyCommands.builder()
