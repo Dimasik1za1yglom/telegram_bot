@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.project.dimusik.service.BotService;
+import ru.project.dimusik.controller.TelegramBot;
 
 @Component
 public class BotInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotInitializer.class);
 
     @Autowired
-    private BotService botService;
+    private TelegramBot telegramBot;
 
-    @EventListener({ContextRefreshedEvent.class})
+    @EventListener({ContextRefreshedEvent.  class})
     public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        telegramBotsApi.registerBot(botService);
+        telegramBotsApi.registerBot(telegramBot);
         LOGGER.info("telegram bot REGISTERED");
     }
 }
