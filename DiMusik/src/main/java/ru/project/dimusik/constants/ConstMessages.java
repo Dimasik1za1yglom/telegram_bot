@@ -1,10 +1,13 @@
 package ru.project.dimusik.constants;
 
+/**
+ * Текстовые сообщения, посылаемые ботом
+ */
 public enum ConstMessages {
     HELP_TEXT("Сорян, помощи не будет.\n\n " +
             "Просто напиши /start и не парся!"),
     NOT_COMMAND("Команда пока не поддерживается, сорямба"),
-    GREETING("Команда пока не поддерживается, сорямба");
+    GREETING("Привет, %s! :heart_eyes:");
 
     private final String message;
 

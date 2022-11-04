@@ -9,4 +9,11 @@ create table account
     user_name     varchar(100),
     chat_id       integer,
     registered_at TIMESTAMP
+);
+
+--changeset tele_bot_music:2
+create table music
+(
+    id   serial primary key,
+    name varchar(199)
 )

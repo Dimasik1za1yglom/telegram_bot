@@ -24,10 +24,10 @@ public class ReplyKeyboardMaker {
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setKeyboard(keyboard);
-        LOGGER.info("created  a menu keyboard");
         keyboardMarkup.setSelective(true);
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setOneTimeKeyboard(false);
+        LOGGER.info("created  a menu keyboard");
         return keyboardMarkup;
     }
 }
