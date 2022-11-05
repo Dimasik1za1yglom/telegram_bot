@@ -13,6 +13,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.project.dimusik.config.BotConfiguration;
 import ru.project.dimusik.constants.ConstCommand;
+import ru.project.dimusik.exception.constants.ConstResponseError;
+import ru.project.dimusik.service.errors.sample.ErrorService;
 import ru.project.dimusik.service.handlers.sample.AccountService;
 import ru.project.dimusik.service.handlers.sample.ExternalMenu;
 import ru.project.dimusik.service.handlers.sample.MessageHandlerService;
@@ -28,14 +30,16 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final ExternalMenu externalMenu;
     private final AccountService accountService;
     private final MessageHandlerService messageHandlerService;
+    private final ErrorService errorService;
 
     public TelegramBot(BotConfiguration botConfiguration,
                        ExternalMenu externalMenu, AccountService accountService,
-                       MessageHandlerService messageHandlerService) {
+                       MessageHandlerService messageHandlerService, ErrorService errorService) {
         this.botConfiguration = botConfiguration;
         this.externalMenu = externalMenu;
         this.accountService = accountService;
         this.messageHandlerService = messageHandlerService;
+        this.errorService = errorService;
         createMenu();
     }
 
@@ -73,20 +77,31 @@ public class TelegramBot extends TelegramLongPollingBot {
         externalMenu.addMenuKeyboard(sendMessage);
         try {
             execute(sendMessage);
+            LOGGER.info("sent a message to the user: {}", sendMessage);
         } catch (TelegramApiException e) {
             LOGGER.error("Error sending the message: {}", e.getMessage());
+            sentErrorMessage(sendMessage);
         }
-        LOGGER.info("sent a message to the user: {}", sendMessage);
     }
+
+    private void sentErrorMessage(SendMessage sendMessage) {
+        externalMenu.addMenuKeyboard(sendMessage);
+        try {
+            execute(errorService.createErrorSendMessage(sendMessage));
+        } catch (TelegramApiException e) {
+            LOGGER.error(" {} Error sending the message: {}", ConstResponseError.ERROR_GLOBAL_MESSAGE, e.getMessage());
+        }
+    }
+
 
     private void createMenu() {
         try {
             execute(SetMyCommands.builder()
                     .commands(externalMenu.createMenu()).build());
+            LOGGER.info("The bot menu has been created");
         } catch (TelegramApiException e) {
             LOGGER.error("Menu creation error: {}", e.getMessage());
         }
-        LOGGER.info("The bot menu has been created");
     }
 
     private void confirmVideoSearch(Long chatId) {
