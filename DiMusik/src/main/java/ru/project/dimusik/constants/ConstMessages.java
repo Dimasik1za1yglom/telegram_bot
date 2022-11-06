@@ -7,7 +7,8 @@ public enum ConstMessages {
     HELP_TEXT("Сорян, помощи не будет.\n\n " +
             "Просто напиши /start и не парся!"),
     NOT_COMMAND("Команда пока не поддерживается, сорямба"),
-    GREETING("Привет, %s! :heart_eyes:");
+    GREETING("Привет, %s! :heart_eyes:"),
+    SEARCH_CONFIRMATION("Вы уверены в правильности написания названия?");
 
     private final String message;
 

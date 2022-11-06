@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.project.dimusik.constants.ConstCommand;
+import ru.project.dimusik.constants.commands.ConstCommandsMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,14 @@ public class ReplyKeyboardMaker {
 
     public ReplyKeyboardMarkup getMainMenuKeyboard() {
         KeyboardRow row1 = new KeyboardRow();
-        row1.add(ConstCommand.START);
-        row1.add(ConstCommand.HELP);
+        for (ConstCommandsMenu command : ConstCommandsMenu.values()) {
+            row1.add(command.getValue());
+        }
 
         List<KeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(row1);
-
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+
         keyboardMarkup.setKeyboard(keyboard);
         keyboardMarkup.setSelective(true);
         keyboardMarkup.setResizeKeyboard(true);

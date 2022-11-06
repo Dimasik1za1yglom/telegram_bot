@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
-import ru.project.dimusik.constants.ConstCommand;
+import ru.project.dimusik.constants.commands.ConstCommandsMenu;
 import ru.project.dimusik.constants.ConstInfoMenu;
 import ru.project.dimusik.destelegram.keyboards.ReplyKeyboardMaker;
 import ru.project.dimusik.service.handlers.sample.ExternalMenu;
@@ -24,8 +24,9 @@ public class ExternalMenuImpl implements ExternalMenu {
     @Override
     public List<BotCommand> createMenu() {
         List<BotCommand> listCommands = new ArrayList<>();
-        listCommands.add(new BotCommand(ConstCommand.START, ConstInfoMenu.START.getMessage()));
-        listCommands.add(new BotCommand(ConstCommand.HELP, ConstInfoMenu.HELP.getMessage()));
+        listCommands.add(new BotCommand(ConstCommandsMenu.START.getValue(), ConstInfoMenu.START.getMessage()));
+        listCommands.add(new BotCommand(ConstCommandsMenu.HELP.getValue(), ConstInfoMenu.HELP.getMessage()));
+        listCommands.add(new BotCommand(ConstCommandsMenu.SEARCH.getValue(), ConstInfoMenu.SEARCH.getMessage()));
         LOGGER.info("create list commands");
         return listCommands;
     }

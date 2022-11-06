@@ -8,18 +8,24 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.project.dimusik.constants.ConstMessages;
-import ru.project.dimusik.service.handlers.sample.MessageHandlerService;
+import ru.project.dimusik.service.handlers.sample.CommandMessageProcessingService;
+import ru.project.dimusik.service.handlers.sample.ExternalMenu;
+import ru.project.dimusik.service.handlers.sample.ResponseMessageProcessingService;
 
 @RequiredArgsConstructor
 @Service
-public class MessageHandlerServiceImpl implements MessageHandlerService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageHandlerServiceImpl.class);
+public class CommandMessageProcessingServiceImpl implements CommandMessageProcessingService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandMessageProcessingServiceImpl.class);
+
+    private final ResponseMessageProcessingService responseMessageProcessingService;
+    private final ExternalMenu externalMenu;
 
     @Override
     public SendMessage messageProcessingHelp(Message message) {
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(message.getChatId())
                 .text(ConstMessages.HELP_TEXT.getMessage()).build();
+        externalMenu.addMenuKeyboard(sendMessage);
         LOGGER.info("create SendMessage to the command /help");
         return sendMessage;
     }
@@ -31,13 +37,20 @@ public class MessageHandlerServiceImpl implements MessageHandlerService {
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(message.getChatId())
                 .text(answer).build();
+        externalMenu.addMenuKeyboard(sendMessage);
         LOGGER.info("create SendMessage to the command /start");
         return sendMessage;
     }
 
     @Override
     public SendMessage messageProcessingSearchMusic(Message message) {
-        return null;
+        SendMessage sendMessage = SendMessage.builder()
+                .chatId(message.getChatId())
+                .text(ConstMessages.SEARCH_CONFIRMATION.getMessage())
+                .build();
+        responseMessageProcessingService.addInlineKeyboardMarkup(sendMessage);
+        LOGGER.info("create SendMessage to the command /search");
+        return sendMessage;
     }
 
     @Override
@@ -45,6 +58,7 @@ public class MessageHandlerServiceImpl implements MessageHandlerService {
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(message.getChatId())
                 .text(ConstMessages.NOT_COMMAND.getMessage()).build();
+        externalMenu.addMenuKeyboard(sendMessage);
         LOGGER.info("create SendMessage to the non existent command");
         return sendMessage;
     }

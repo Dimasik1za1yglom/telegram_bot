@@ -1,4 +1,4 @@
-package ru.project.dimusik.constants;
+package ru.project.dimusik.constants.commands;
 
 /**
  * Команды бота
