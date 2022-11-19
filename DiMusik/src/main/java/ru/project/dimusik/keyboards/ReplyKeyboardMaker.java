@@ -1,4 +1,4 @@
-package ru.project.dimusik.destelegram.keyboards;
+package ru.project.dimusik.keyboards;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ru.project.dimusik.constants.commands.ConstCommandsMenu;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class ReplyKeyboardMaker {
@@ -20,8 +19,9 @@ public class ReplyKeyboardMaker {
             row1.add(command.getValue());
         }
 
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(row1);
+        var keyboard = Stream.<KeyboardRow>builder()
+                .add(row1).build().toList();
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 
         keyboardMarkup.setKeyboard(keyboard);

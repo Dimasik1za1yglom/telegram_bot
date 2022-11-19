@@ -7,16 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.project.dimusik.config.BotConfiguration;
-import ru.project.dimusik.constants.commands.ConstCommand;
 import ru.project.dimusik.exception.constants.ConstResponseError;
 import ru.project.dimusik.service.errors.sample.ErrorService;
-import ru.project.dimusik.service.handlers.sample.AccountService;
-import ru.project.dimusik.service.handlers.sample.CommandMessageProcessingService;
-import ru.project.dimusik.service.handlers.sample.ExternalMenu;
+import ru.project.dimusik.service.handlers.CallbackQueryHandlerService;
+import ru.project.dimusik.service.handlers.MessageHandlerService;
+import ru.project.dimusik.service.response.sample.ExternalMenu;
 
 import javax.annotation.PostConstruct;
 
@@ -27,9 +25,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfiguration botConfiguration;
     private final ExternalMenu externalMenu;
-    private final AccountService accountService;
-    private final CommandMessageProcessingService messageHandlerService;
     private final ErrorService errorService;
+    private final MessageHandlerService messageHandlerService;
+    private final CallbackQueryHandlerService callbackQueryHandlerService;
 
     @PostConstruct
     public void init() {
@@ -48,23 +46,15 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            respondToCommands(update.getMessage());
-        }
-    }
+        if (update.hasCallbackQuery()) {
+//            sentMessage(callbackQueryHandlerService.processCallbackQuery(update.getCallbackQuery()));
 
-    private void respondToCommands(Message message) {
-        String textMessage = message.getText();
-        LOGGER.info("Received a message: {}.- chat: {}", textMessage, message.getChat());
-        switch (textMessage) {
-            case ConstCommand.START -> {
-                accountService.saveNewAccount(message);
-                sentMessage(messageHandlerService.messageProcessingStart(message));
-            }
-            case ConstCommand.HELP -> sentMessage(messageHandlerService.messageProcessingHelp(message));
-            case ConstCommand.SEARCH -> sentMessage(messageHandlerService.messageProcessingSearchMusic(message));
-            default -> sentMessage(messageHandlerService.processingNonExistentCommands(message));
+        } else if (update.hasMessage() && update.getMessage().isCommand()) {
+            sentMessage(messageHandlerService.respondToCommands(update.getMessage()));
+        } else if (update.hasMessage() && update.getMessage().hasText()) {
+
         }
+
     }
 
     private void sentMessage(SendMessage sendMessage) {

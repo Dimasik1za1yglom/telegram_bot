@@ -1,4 +1,4 @@
-package ru.project.dimusik.destelegram.keyboards;
+package ru.project.dimusik.keyboards;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,22 +7,23 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.project.dimusik.constants.CallbackMusicButton;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class InlineKeyboardMaker {
     private static final Logger LOGGER = LoggerFactory.getLogger(InlineKeyboardMaker.class);
 
     public InlineKeyboardMarkup getInlineMessageButtons() {
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
 
         List<InlineKeyboardButton> keyboardButtonsRow = Arrays.stream(CallbackMusicButton.values())
                 .map(x -> getButton(x.getValue(), x.name()))
                 .collect(Collectors.toList());
-        rowList.add(keyboardButtonsRow);
+
+        var rowList = Stream.<List<InlineKeyboardButton>>builder()
+                .add(keyboardButtonsRow).build().toList();
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(rowList);

@@ -12,17 +12,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "music")
-public class Music {
-
+@Table(name = "message_steps")
+public class MessageStep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
+    private String step;
 }

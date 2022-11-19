@@ -1,12 +1,12 @@
-package ru.project.dimusik.service.handlers.implementation;
+package ru.project.dimusik.service.response.implementation;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ru.project.dimusik.destelegram.keyboards.InlineKeyboardMaker;
-import ru.project.dimusik.service.handlers.sample.ResponseMessageProcessingService;
+import ru.project.dimusik.keyboards.InlineKeyboardMaker;
+import ru.project.dimusik.service.response.sample.ResponseMessageProcessingService;
 
 @RequiredArgsConstructor
 @Service

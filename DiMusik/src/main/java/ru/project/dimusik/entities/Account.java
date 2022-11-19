@@ -30,4 +30,8 @@ public class Account {
 
     private LocalDateTime registeredAt;
 
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private MessageStep messageStep;
+
 }

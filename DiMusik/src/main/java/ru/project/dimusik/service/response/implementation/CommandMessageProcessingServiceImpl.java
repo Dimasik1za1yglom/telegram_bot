@@ -1,4 +1,4 @@
-package ru.project.dimusik.service.handlers.implementation;
+package ru.project.dimusik.service.response.implementation;
 
 import com.vdurmont.emoji.EmojiParser;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.project.dimusik.constants.ConstMessages;
-import ru.project.dimusik.service.handlers.sample.CommandMessageProcessingService;
-import ru.project.dimusik.service.handlers.sample.ExternalMenu;
-import ru.project.dimusik.service.handlers.sample.ResponseMessageProcessingService;
+import ru.project.dimusik.service.response.sample.CommandMessageProcessingService;
+import ru.project.dimusik.service.response.sample.ExternalMenu;
+import ru.project.dimusik.service.response.sample.ResponseMessageProcessingService;
 
 @RequiredArgsConstructor
 @Service
@@ -32,7 +32,7 @@ public class CommandMessageProcessingServiceImpl implements CommandMessageProces
 
     @Override
     public SendMessage messageProcessingStart(Message message) {
-        String answer = EmojiParser.parseToUnicode(String.format(ConstMessages.GREETING.getMessage(),
+        String answer = EmojiParser.parseToUnicode(ConstMessages.GREETING.getMessage().formatted(
                 message.getChat().getUserName()));
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(message.getChatId())

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.project.dimusik.exception.constants.ConstResponseError;
 import ru.project.dimusik.service.errors.sample.ErrorService;
-import ru.project.dimusik.service.handlers.implementation.ExternalMenuImpl;
-import ru.project.dimusik.service.handlers.sample.ExternalMenu;
+import ru.project.dimusik.service.response.sample.ExternalMenu;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +20,7 @@ public class ErrorServiceImpl implements ErrorService {
     public SendMessage createErrorSendMessage(SendMessage sendMessage) {
         sendMessage.setText(ConstResponseError.ERROR_SEND_MESSAGE.getMessage());
         externalMenu.addMenuKeyboard(sendMessage);
+        LOGGER.info("create error send message");
         return sendMessage;
     }
 }

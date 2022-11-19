@@ -1,4 +1,4 @@
-package ru.project.dimusik.service.handlers.implementation;
+package ru.project.dimusik.service.response.implementation;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import ru.project.dimusik.constants.commands.ConstCommandsMenu;
-import ru.project.dimusik.constants.ConstInfoMenu;
-import ru.project.dimusik.destelegram.keyboards.ReplyKeyboardMaker;
-import ru.project.dimusik.service.handlers.sample.ExternalMenu;
+import ru.project.dimusik.constants.commands.ConstInfoMenu;
+import ru.project.dimusik.keyboards.ReplyKeyboardMaker;
+import ru.project.dimusik.service.response.sample.ExternalMenu;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -23,10 +23,11 @@ public class ExternalMenuImpl implements ExternalMenu {
 
     @Override
     public List<BotCommand> createMenu() {
-        List<BotCommand> listCommands = new ArrayList<>();
-        listCommands.add(new BotCommand(ConstCommandsMenu.START.getValue(), ConstInfoMenu.START.getMessage()));
-        listCommands.add(new BotCommand(ConstCommandsMenu.HELP.getValue(), ConstInfoMenu.HELP.getMessage()));
-        listCommands.add(new BotCommand(ConstCommandsMenu.SEARCH.getValue(), ConstInfoMenu.SEARCH.getMessage()));
+        var listCommands = Stream.<BotCommand>builder()
+                .add(new BotCommand(ConstCommandsMenu.START.getValue(), ConstInfoMenu.START.getMessage()))
+                .add(new BotCommand(ConstCommandsMenu.HELP.getValue(), ConstInfoMenu.HELP.getMessage()))
+                .add(new BotCommand(ConstCommandsMenu.SEARCH.getValue(), ConstInfoMenu.SEARCH.getMessage()))
+                .build().toList();
         LOGGER.info("create list commands");
         return listCommands;
     }

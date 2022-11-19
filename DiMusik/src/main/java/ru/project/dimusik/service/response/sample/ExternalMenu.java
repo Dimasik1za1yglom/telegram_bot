@@ -1,4 +1,4 @@
-package ru.project.dimusik.service.handlers.sample;
+package ru.project.dimusik.service.response.sample;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
